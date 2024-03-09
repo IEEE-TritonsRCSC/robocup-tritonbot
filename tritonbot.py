@@ -6,8 +6,7 @@ import select
 import ssl_simulation_robot_control_pb2 as RobotControl
 import triton_bot_communication_pb2 as Communication
 import math
-from tritonbot_message_processor.velocityConversions30 import * # Un-comment line below for 90 degree chasis
-# from tritonbot_message_processor.velocityConversions90 import * # Deprecated
+from tritonbot_message_processor.velocityConversions30 import * 
 from interface.ai_interface import *
 from interface.embedded_systems_interface import *
 from analytics.plotter import *
@@ -76,21 +75,21 @@ try:
  
 	    # For debugging purposes
         hex_values = [hex(value) for value in msg] # converting binary to hex for ease of reading
-        expected = msg
         print(msg)
         print(hex_values)
 
 	    # Send data to embedded
         print(sendToEmbedded(msg))	
-        actual = print(readFromEmbedded())
+        actual_b = print(readFromEmbedded())
         
         # Draw up data analytics if -a flag is passed in the command-line args
         if (len(sys.argv) > 1 and sys.argv[1] == "-a"):
             visuals = Plotter()
-            actual = b'0x1111abcdabcdabcdabcd'
-            print(f"Expected: {expected} {expected[0]}")
-            print(f"Actual: {actual} {actual[0]}")
-            visuals.update_plot(t, expected, actual)
+            expectedRpmArray = getWheelVelocities(actions)
+            actualRpmArray = hexToRpmArray(4, actual_b) 
+            print(f"Expected: {expectedRpmArray}")
+            print(f"Actual: {actualRpmArray}")
+            visuals.update_plot(t, expectedRpmArray, actualRpmArray)
         t += 1	
             
         empty_socket(udp_socket)

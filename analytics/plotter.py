@@ -132,7 +132,7 @@ class Plotter:
         return result                         # return computed value 
 
 
-
+    # This function is deprecated
     def extractVelocities(self, expected, actual):
         """
         This function is designed to extract velocities from hexadecimal
@@ -155,7 +155,7 @@ class Plotter:
         for i in range(4):
             expectedSpeed_b = 0
             for j in range(4):
-                expectedSpeed_b += expected[4*i + 4 + j] # This line should work as expected
+                expectedSpeed_b += expected[4*i + 4 + j] 
             expectedVelocities.append(self.twos_comp(int(str(expectedSpeed_b), 2), len(str(expectedSpeed_b))))
                 
         
@@ -165,10 +165,6 @@ class Plotter:
             for j in range(16):
                 actualSpeed_b = actual[16*i + 32 + j]
             actualVelocities.append(self.twos_comp(int(str(actualSpeed_b), 2), len(str(actualSpeed_b))))
-        
-
-
-
 
 
 
@@ -190,7 +186,7 @@ class Plotter:
         return expectedVelocities, actualVelocities
 
 
-    def update_plot(self, frame, expectedWheelVelocities, actualWheelVelocities):
+    def update_plot(self, frame, expectedVelocities, actualVelocities):
         """
         This function updates a plot with the given frame, expected wheel
         velocities, and actual wheel velocities.
@@ -214,7 +210,7 @@ class Plotter:
         
         t = frame
         
-        expectedVelocities, actualVelocities = self.extractVelocities(expectedWheelVelocities, actualWheelVelocities)
+        # expectedVelocities, actualVelocities = self.extractVelocities(expectedWheelVelocities, actualWheelVelocities)
         
         expectedWheelVelocity1 = expectedVelocities[0]
         actualWheelVelocity1 = actualVelocities[0]
