@@ -119,7 +119,7 @@ class Plotter:
         #with open("actualData.txt", "a"):
         #        actualData.write(sttime + "\n")
     
-
+    # This function is deprecated
     def twos_comp(self, val, bits):
         """compute the 2's complement of int value val"""
         if (val & (1 << (bits - 1))) != 0: # if sign bit is set e.g., 8bit: 128-255
@@ -131,20 +131,11 @@ class Plotter:
     
         return result                         # return computed value 
 
-
     # This function is deprecated
     def extractVelocities(self, expected, actual):
         """
         This function is designed to extract velocities from hexadecimal
         values representing expected and actual velocities.
-        
-        :param expected: The `expected` parameter likely
-        represents the expected velocity in hexadecimal format. This parameter may
-        contain the expected velocity value encoded in hexadecimal
-        :param actual: The `actual` parameter likely
-        represents the actual velocity in hexadecimal format. To extract the
-        velocities from the hexadecimal format, you can convert the hexadecimal
-        values to decimal values.
         
         TODO (Current implementation plots random values)
         """

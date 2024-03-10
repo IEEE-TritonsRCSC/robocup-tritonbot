@@ -103,12 +103,18 @@ def action_to_byte_array(action):
 # This function is used purely for data analytic purposes
 def hexToRpmArray(headerLength, data):
     """
-    This function converts a hexadecimal string to an array of RPM values.
+    This function converts a hexadecimal string to an array of integer RPM values.
     
     :param headerLength: The `headerLength` parameter specifies the length of the
     header in the data array. This information is important for parsing the data
     correctly
-    :param data: data to convert from hex to rpm
-    TODO
+    :param data: string data to convert from hex to rpm
     """
-    pass
+    rpm = []
+    
+    for i in range(4):
+        hexSpeed = int(data[headerLength + 4*i : headerLength + 4*i + 4], 16)
+        speed = -(hexSpeed & 0x80000000) | (hexSpeed & 0x7fffffff)
+        rpm.append(int(speed, 10))
+        
+    return rpm
