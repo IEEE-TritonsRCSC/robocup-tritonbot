@@ -139,7 +139,7 @@ class Plotter:
         
         TODO (Current implementation plots random values)
         """
-    
+        '''
         expectedVelocities, actualVelocities = [], []
 
         # Extract expected velocities
@@ -172,7 +172,7 @@ class Plotter:
         
         expectedVelocities.append(expected - randint(1, 20))
         actualVelocities.append(actual - randint(1, 20))
-        '''
+        
         
         return expectedVelocities, actualVelocities
 
@@ -267,7 +267,8 @@ class Plotter:
         for ax in self.axs.flat:
             ax.relim()
             ax.autoscale_view()
-
+        
+        plt.show()
         #plt.pause(0.01)
 
     def save(self, filename='output.png'):

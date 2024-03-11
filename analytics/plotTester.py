@@ -9,7 +9,7 @@ graph = Plotter()
 print("initialized")
 for t in range(300):
     print("SOS")
-    graph.update_plot(t, 300, 200)
+    graph.update_plot(t, [300, 250, 412, 542], [542, 143, 1232, 200])
     sleep(1)
 
 save = input("Graph plotted. Save to png? (Y/n)\n").upper()
