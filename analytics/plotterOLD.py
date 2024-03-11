@@ -4,9 +4,13 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation as animation
 from matplotlib import style
 style.use('dark_background')
-import os
+import os#, sys, time, datetime
 from random import randint
 
+#matplotlib.use('TKAgg') # Use X11 backend for real time data forwarding
+expectedData = open("expectedData.txt", "a")
+actualData = open("actualData.txt", "a")
+        
 
 class Plotter:
     def __init__(self):
@@ -105,27 +109,58 @@ class Plotter:
 
         # Create the animation
         self.anim = animation(self.fig, self.update_plot, frames=100, interval=1000, repeat=False)
-        
+		
+		# Initialize file objects
+        expectedData = open("expectedData.txt", "a")
+        actualData = open("actualData.txt", "a")
+
+        #with open("expectedData.txt", "a"):
+        #        expectedData.write(sttime + "\n")
+        #with open("actualData.txt", "a"):
+        #        actualData.write(sttime + "\n")
     
+    # This function is deprecated
+    def twos_comp(self, val, bits):
+        """compute the 2's complement of int value val"""
+        if (val & (1 << (bits - 1))) != 0: # if sign bit is set e.g., 8bit: 128-255
+            val = val - (1 << bits)        # compute negative value
+            
+        result = 0
+        for i in val:
+            result =+ int(i) * 2**(bits - i)
+    
+        return result                         # return computed value 
+
+    # This function is deprecated
     def extractVelocities(self, expected, actual):
         """
         This function is designed to extract velocities from hexadecimal
         values representing expected and actual velocities.
         
-        :param expected: The `expected` parameter likely
-        represents the expected velocity in hexadecimal format. This parameter may
-        contain the expected velocity value encoded in hexadecimal
-        :param actual: The `actual` parameter likely
-        represents the actual velocity in hexadecimal format. To extract the
-        velocities from the hexadecimal format, you can convert the hexadecimal
-        values to decimal values.
-        
         TODO (Current implementation plots random values)
         """
-        
-        
+        '''
         expectedVelocities, actualVelocities = [], []
+
+        # Extract expected velocities
+        for i in range(4):
+            expectedSpeed_b = 0
+            for j in range(4):
+                expectedSpeed_b += expected[4*i + 4 + j] 
+            expectedVelocities.append(self.twos_comp(int(str(expectedSpeed_b), 2), len(str(expectedSpeed_b))))
+                
         
+        # Extract actual velocities    
+        for i in range(4):
+            actualSpeed_b = 0
+            for j in range(16):
+                actualSpeed_b = actual[16*i + 32 + j]
+            actualVelocities.append(self.twos_comp(int(str(actualSpeed_b), 2), len(str(actualSpeed_b))))
+
+
+
+        '''        
+        expectedVelocities, actualVelocities = [], []
         expectedVelocities.append(expected - randint(1, 20)) # random numbers for testing purposes
         actualVelocities.append(actual + randint(1, 20))
 
@@ -137,6 +172,7 @@ class Plotter:
         
         expectedVelocities.append(expected - randint(1, 20))
         actualVelocities.append(actual - randint(1, 20))
+        
         
         return expectedVelocities, actualVelocities
 
@@ -165,7 +201,7 @@ class Plotter:
         
         t = frame
         
-        #expectedVelocities, actualVelocities = self.extractVelocities(expectedWheelVelocities, actualWheelVelocities)
+        # expectedVelocities, actualVelocities = self.extractVelocities(expectedWheelVelocities, actualWheelVelocities)
         
         expectedWheelVelocity1 = expectedVelocities[0]
         actualWheelVelocity1 = actualVelocities[0]
@@ -194,7 +230,25 @@ class Plotter:
         self.expectedWheelVelocities4.append(expectedWheelVelocity4)
         self.actualWheelVelocities4.append(actualWheelVelocity4)
 
-    
+        expectedData.write("1)" + str(expectedWheelVelocity1))
+        expectedData.write("\n")
+        expectedData.write("2)" + str(expectedWheelVelocity2))
+        expectedData.write("\n")
+        expectedData.write("3)" + str(expectedWheelVelocity3))
+        expectedData.write("\n")
+        expectedData.write("4)" + str(expectedWheelVelocity4))
+        expectedData.write("\n")		
+        expectedData.write("\n")
+	
+        actualData.write("1)" + str(actualWheelVelocity1))		
+        actualData.write("\n")
+        actualData.write("2)" + str(actualWheelVelocity2))
+        actualData.write("\n")
+        actualData.write("3)" + str(actualWheelVelocity3))
+        actualData.write("\n")
+        actualData.write("4)" + str(actualWheelVelocity4))
+        actualData.write("\n")
+        actualData.write("\n")
         # Update line data
         self.expectedWheel1[0].set_data(self.t, self.expectedWheelVelocities1)
         self.actualWheel1[0].set_data(self.t, self.actualWheelVelocities1)
@@ -213,8 +267,9 @@ class Plotter:
         for ax in self.axs.flat:
             ax.relim()
             ax.autoscale_view()
-
-        plt.pause(0.0001)
+        
+        plt.show()
+        plt.pause(0.001)
 
     def save(self, filename='output.png'):
         """
@@ -229,3 +284,8 @@ class Plotter:
         # Save the figure to a PNG file
         filename = filename if filename else "output.png"
         self.fig.savefig(os.path.join("saved_graphs", filename))
+
+		# Save data into text files
+        actualData.close()
+        expectedData.close()
+		
