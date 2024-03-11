@@ -101,7 +101,7 @@ class Plotter:
         
         for ax in self.axs.flat:
             ax.set_xlim(0, 150)
-            ax.set_ylim(-500, 20000)
+            ax.set_ylim(2000, 12000)
 
         # Create the animation
         self.anim = animation(self.fig, self.update_plot, frames=100, interval=1000, repeat=False)
@@ -226,6 +226,10 @@ class Plotter:
         saved. By default, the image will be saved as 'output.png' if no filename is
         provided when calling the method, defaults to output.png (optional)
         """
+        save_dir = "saved_graphs"
+        os.makedirs(save_dir, exist_ok=True)
         # Save the figure to a PNG file
         filename = filename if filename else "output.png"
-        self.fig.savefig(os.path.join("saved_graphs", filename))
+        save_path = os.path.abspath(os.path.join(save_dir, filename))
+        self.fig.savefig(save_path)
+        # self.fig.savefig(os.path.join("saved_graphs", filename))
