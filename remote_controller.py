@@ -4,8 +4,10 @@ from tritonbot_message_processor.velocityConversions30 import *
 from analytics.plotter import *
 import sys
 
-motorSpeed = 3000
-
+motorSpeed = 5000 
+higherByte = (motorSpeed >> 8) & 0xff
+lowerByte = motorSpeed & 0xff
+print(motorSpeed)
 
 '''Move commands'''
 wheel1 = bytes([0x11, 0x11, 0x0a, 0xbc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
@@ -13,6 +15,15 @@ wheel2 = bytes([0x11, 0x11, 0x00, 0x00, 0x0a, 0xbc, 0x00, 0x00, 0x00, 0x00])
 wheel3 = bytes([0x11, 0x11, 0x00, 0x00, 0x00, 0x00, 0x0a, 0xbc, 0x00, 0x00])
 wheel4 = bytes([0x11, 0x11, 0x0a, 0xbc, 0x00, 0x00, 0x00, 0x00, 0x0a, 0xbc])
 wheelAll = bytes([0x11, 0x11, 0x0b, 0xb8, 0x0b, 0xb8, 0x0b, 0xb8, 0x0b, 0xb8])
+
+velocities = [0x11, 0x11]
+for i in range(4):
+    velocities.append(motorSpeed>>8 & 0xff)
+    velocities.append(motorSpeed & 0xff)
+print(bytes(velocities))
+
+velocities = bytes(velocities)
+
 
 
 stop = bytes([0x11, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
@@ -34,9 +45,10 @@ t=0
 try:
     while True:
         message = str(b'11110abc0abc0abc0abc')
+         
         print(message)
             
-        sendToEmbedded(wheelAll)
+        sendToEmbedded(velocities)
 
         actual_b = readFromEmbedded()
         print(actual_b)
@@ -48,7 +60,7 @@ try:
         
         if (len(sys.argv) > 1 and sys.argv[1] == "-a"):
             # visuals = Plotter()
-            expectedRpmArray = hexToRpmArray(6, str(message))
+            expectedRpmArray = hexToRpmArray(6, message)#[motorSpeed, motorSpeed, motorSpeed, motorSpeed])
             actualRpmArray = hexToRpmArray(8, actual_b) 
             
             print(f"Expected: {expectedRpmArray}")
@@ -59,6 +71,7 @@ try:
 
 		
 except KeyboardInterrupt:
+    stopAll()
     print("\nProgram terminated.")
     save = input("Graph plotted. Save to png? (Y/n)\n").upper()
 
@@ -69,5 +82,4 @@ except KeyboardInterrupt:
 
 
 finally:
-    stopAll()
     print("stopped")
