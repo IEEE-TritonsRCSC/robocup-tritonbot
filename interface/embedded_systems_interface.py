@@ -65,6 +65,7 @@ def readFromEmbedded():
 
 def stopAll():
     sendToEmbedded(stop)
+    ser.close()
 
 def test():
     """Function to test sending and receiving data
@@ -83,7 +84,6 @@ def test():
 
     finally:
         stopAll()
-        ser.close()
 
 
 if __name__ == "__main__":
