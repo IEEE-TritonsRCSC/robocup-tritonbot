@@ -63,6 +63,8 @@ def readFromEmbedded():
         return rx_data.hex()
     return
 
+def stopAll():
+    sendToEmbedded(stop)
 
 def test():
     """Function to test sending and receiving data
@@ -72,7 +74,7 @@ def test():
     """
     try: 
         while True:
-            sendToEmbedded(message2)
+            sendToEmbedded(stop)
             print("sent")
             print(f"Received data: {readFromEmbedded()}")
 		
@@ -80,7 +82,7 @@ def test():
         print("\nProgram terminated.")
 
     finally:
-        sendToEmbedded(stop)
+        stopAll()
         ser.close()
 
 
