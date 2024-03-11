@@ -1,5 +1,5 @@
 import matplotlib
-#matplotlib.use('TKAgg') # Use X11 backend for real time data forwarding
+matplotlib.use('TKAgg') # Use X11 backend for real time data forwarding
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation as animation
 from matplotlib import style
@@ -7,7 +7,7 @@ style.use('dark_background')
 import os#, sys, time, datetime
 from random import randint
 
-matplotlib.use('Agg') # Use X11 backend for real time data forwarding
+#matplotlib.use('TKAgg') # Use X11 backend for real time data forwarding
 expectedData = open("expectedData.txt", "a")
 actualData = open("actualData.txt", "a")
         
@@ -268,7 +268,7 @@ class Plotter:
             ax.relim()
             ax.autoscale_view()
 
-        plt.pause(0.0001)
+        #plt.pause(0.01)
 
     def save(self, filename='output.png'):
         """
