@@ -100,8 +100,8 @@ class Plotter:
         plt.tight_layout()
         
         for ax in self.axs.flat:
-            ax.set_xlim(0, 300)
-            ax.set_ylim(-500, 500)
+            ax.set_xlim(0, 150)
+            ax.set_ylim(-500, 20000)
 
         # Create the animation
         self.anim = animation(self.fig, self.update_plot, frames=100, interval=1000, repeat=False)

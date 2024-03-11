@@ -25,6 +25,9 @@ dribble = 0x01
 kick = 0x02
 chip = 0x03
 
+visuals = Plotter()
+t=0
+
 try:
     while True:
         message = str(b'11110abc0abc0abc0abc')
@@ -39,9 +42,9 @@ try:
             continue
             actual_b = "11110000000000000000"
         
-        t=0
+        
         if (len(sys.argv) > 1 and sys.argv[1] == "-a"):
-            visuals = Plotter()
+            # visuals = Plotter()
             expectedRpmArray = hexToRpmArray(6, str(message))
             actualRpmArray = hexToRpmArray(8, actual_b) 
             
@@ -54,6 +57,13 @@ try:
 		
 except KeyboardInterrupt:
     print("\nProgram terminated.")
+    save = input("Graph plotted. Save to png? (Y/n)\n").upper()
+
+    if save == 'Y':
+        saveName = input("What would you like to name this file?\n")
+        visuals.save(saveName)
+
+
 
 finally:
     stopAll()
