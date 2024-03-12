@@ -33,11 +33,16 @@ def init_socket(address, port):
 		The newly created socket
 	"""
 
-    # create a UDP socket
-	udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-    # bind the socket to the input address and port
+    	# create a UDP socket
+	udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+	udp_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+	
+    	# bind the socket to the input address and port
 	udp_socket.bind((address, port))
 
-    # return the upd socket
+	# join multicast
+	udp_socket.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP,
+			      socket.inet_aton(address) + socket.inet_aton('0.0.0.0'))
+
+    	# return the upd socket
 	return udp_socket
