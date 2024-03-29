@@ -2,6 +2,7 @@ from time import sleep
 from interface.embedded_systems_interface import *
 from tritonbot_message_processor.velocityConversions30 import * 
 from analytics.plotter import *
+from interface.pid import PID as pid
 import sys
 
 motorSpeed = 3000 
