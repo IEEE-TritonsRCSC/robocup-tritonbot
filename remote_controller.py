@@ -87,7 +87,7 @@ try:
             # visuals = Plotter()
             expectedRpmArray = hexToRpmArray(6, message)#[motorSpeed, motorSpeed, motorSpeed, motorSpeed])
             actualRpmArray = hexToRpmArray(8, actual_b) 
-            
+         
             print(f"Expected: {expectedRpmArray}")
             
             print(f"Actual: {actualRpmArray}")

@@ -114,7 +114,7 @@ def hexToRpmArray(headerLength, data):
     
     for i in range(4):
         hexSpeed = int(data[headerLength + 4*i : headerLength + 4*i + 4], 16)
-        speed = -(hexSpeed & 0x80000000) | (hexSpeed & 0x7fffffff)
+        speed = -(hexSpeed & 0x8000) | (hexSpeed & 0x7fff)
         rpm.append(int(str(speed), 10))
         
     return rpm
