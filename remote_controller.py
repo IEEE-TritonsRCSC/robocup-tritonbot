@@ -10,10 +10,11 @@ higherByte = (motorSpeed >> 8) & 0xff
 lowerByte = motorSpeed & 0xff
 print(motorSpeed)
 
-pid1 = pid(5, 1, 0, 1000, 15000)
-pid2 = pid(5, 1, 0, 1000, 15000)
-pid3 = pid(5, 1, 0, 1000, 15000)
-pid4 = pid(5, 1, 0, 1000, 15000)
+pid1 = pid(5, 1, 0, 1000, 8000)
+pid2 = pid(5, 1, 0, 1000, 8000)
+pid3 = pid(5, 1, 0, 1000, 8000)
+pid4 = pid(5, 1, 0, 1000, 8000)
+pidValues = []
 
 '''Move commands'''
 wheel1 = bytes([0x11, 0x11, 0x0a, 0xbc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
@@ -76,10 +77,10 @@ try:
     while True:
         message = str(b'11110abc0abc0abc0abc')
          
-        #print(message)
+        print(message)
         
         #moveCommands() 
-        #sendToEmbedded(velocities)
+        sendToEmbedded(velocities)
 
         actual_b = readFromEmbedded()
         print(actual_b)
@@ -103,7 +104,8 @@ try:
             
             print(f"Actual: {actualRpmArray}")
             visuals.update_plot(t, expectedRpmArray, actualRpmArray)
-            t += 1	
+            t += 1
+            	
 
 		
 except KeyboardInterrupt:

@@ -5,6 +5,8 @@ class PID:
         self.Ki = Ki
         self.integral_limit = integral_limit
         self.target = target
+        self.integral = 0
+        self.last_error = 0
 
     def set_pid_constants(self, Kp, Kd, Ki):
         self.Kp = Kp
