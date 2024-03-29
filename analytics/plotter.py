@@ -1,5 +1,5 @@
 import matplotlib
-matplotlib.use('TKAgg') # Use X11 backend for real time data forwarding
+matplotlib.use('TKAgg') # Use X11 backend for real time data forwarding. Backend must be TKAgg to work with X11.
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation as animation
 from matplotlib import style
@@ -209,10 +209,24 @@ class Plotter:
         self.actualWheel4[0].set_data(self.t, self.actualWheelVelocities4)
     
 
-        # Adjust view limits if needed (TODO)
+        # Adjust view limits based on received data
         for ax in self.axs.flat:
-            ax.relim()
-            ax.autoscale_view()
+            ax.relim()  # Recalculate axis limits
+            ax.autoscale()  # Autoscale axis based on new data
+
+        # Adjust limits for y-axis based on the maximum and minimum values of received data
+        y_min = min(min(self.expectedWheelVelocities1), min(self.actualWheelVelocities1),
+                    min(self.expectedWheelVelocities2), min(self.actualWheelVelocities2),
+                    min(self.expectedWheelVelocities3), min(self.actualWheelVelocities3),
+                    min(self.expectedWheelVelocities4), min(self.actualWheelVelocities4))
+        y_max = max(max(self.expectedWheelVelocities1), max(self.actualWheelVelocities1),
+                    max(self.expectedWheelVelocities2), max(self.actualWheelVelocities2),
+                    max(self.expectedWheelVelocities3), max(self.actualWheelVelocities3),
+                    max(self.expectedWheelVelocities4), max(self.actualWheelVelocities4))
+
+        # Set the y-axis limits with some buffer to prevent data points from being on the edge
+        for ax in self.axs.flat:
+            ax.set_ylim(y_min - 1000, y_max + 1000)  # Adjust as needed
 
         plt.pause(0.0001)
 
