@@ -10,6 +10,11 @@ higherByte = (motorSpeed >> 8) & 0xff
 lowerByte = motorSpeed & 0xff
 print(motorSpeed)
 
+pid1 = pid(5, 1, 0, 1000, 15000)
+pid2 = pid(5, 1, 0, 1000, 15000)
+pid3 = pid(5, 1, 0, 1000, 15000)
+pid4 = pid(5, 1, 0, 1000, 15000)
+
 '''Move commands'''
 wheel1 = bytes([0x11, 0x11, 0x0a, 0xbc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
 wheel2 = bytes([0x11, 0x11, 0x00, 0x00, 0x0a, 0xbc, 0x00, 0x00, 0x00, 0x00])
@@ -88,6 +93,11 @@ try:
             # visuals = Plotter()
             expectedRpmArray = hexToRpmArray(6, message)#[motorSpeed, motorSpeed, motorSpeed, motorSpeed])
             actualRpmArray = hexToRpmArray(8, actual_b) 
+            
+            print(f"Wheel 1 PID output: {pid1.pid_calc(actualRpmArray[0])}")
+            print(f"Wheel 2 PID output: {pid2.pid_calc(actualRpmArray[1])}")
+            print(f"Wheel 3 PID output: {pid3.pid_calc(actualRpmArray[2])}")
+            print(f"Wheel 4 PID output: {pid4.pid_calc(actualRpmArray[3])}")
          
             print(f"Expected: {expectedRpmArray}")
             
