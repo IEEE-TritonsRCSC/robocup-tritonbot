@@ -49,16 +49,31 @@ t=0
 
 
 def moveCommands():
-    control = input("Enter move command. WASDQE or nothing to stop\n")
+    control = input("Enter move command. WASDQE or nothing to stop\n").upper()
+    if (control == "W"):
+        sendToEmbedded(forwards)
+    elif (control == "A"):
+        sendToEmbedded(left)
+    elif (control == "S"):
+        sendToEmbedded(right)
+    elif (control == "D"):
+        sendToEmbedded(backwards)
+    elif (control == "Q"):
+        sendToEmbedded(counterclockwise)
+    elif (control == "E"):
+        sendToEmbedded(clockwise)
+    else:
+        stopAll()
     pass
 
 try:
     while True:
         message = str(b'11110abc0abc0abc0abc')
          
-        print(message)
-            
-        sendToEmbedded(velocities)
+        #print(message)
+        
+        #moveCommands() 
+        #sendToEmbedded(velocities)
 
         actual_b = readFromEmbedded()
         print(actual_b)
