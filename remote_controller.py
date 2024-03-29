@@ -4,7 +4,7 @@ from tritonbot_message_processor.velocityConversions30 import *
 from analytics.plotter import *
 import sys
 
-motorSpeed = 1000 
+motorSpeed = 3000 
 higherByte = (motorSpeed >> 8) & 0xff
 lowerByte = motorSpeed & 0xff
 print(motorSpeed)
@@ -92,4 +92,5 @@ except KeyboardInterrupt:
 
 
 finally:
+    stopAll()
     print("stopped")
