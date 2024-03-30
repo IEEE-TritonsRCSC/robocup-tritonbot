@@ -105,19 +105,12 @@ try:
             	
         else:
             print("Invalid command args. Crtl + C to terminate")
-
 		
 except KeyboardInterrupt:
     if (len(sys.argv) > 1 and sys.argv[1] == "-a"):
         stopAll()
         print("\nProgram terminated.")
-        save = input("Graph plotted. Save to png? (Y/n)\n").upper()
-
-        if save == 'Y':
-            saveName = input("What would you like to name this file?\n")
-            visuals.save(saveName)
-
-
+        visuals.save()
 
 finally:
     stopAll()
