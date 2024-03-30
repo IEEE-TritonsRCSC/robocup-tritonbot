@@ -1,11 +1,8 @@
 from time import sleep
 import sys
 import yaml
-import socket
-import select
 import ssl_simulation_robot_control_pb2 as RobotControl
 import triton_bot_communication_pb2 as Communication
-import math
 from tritonbot_message_processor.velocityConversions30 import * 
 from interface.ai_interface import *
 from interface.embedded_systems_interface import *
