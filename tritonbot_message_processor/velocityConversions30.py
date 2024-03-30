@@ -118,3 +118,19 @@ def hexToRpmArray(headerLength, data):
         rpm.append(int(str(speed), 10))
         
     return rpm
+
+# This function is used purely for data analytic purposes
+def rpmArrayToHex(motorSpeed):
+    """
+    This function converts an array of RPM values to a binary string representing hexadecimal values.
+    
+    :param motorSpeed: An array of integer RPM values to convert to hexadecimal. eg: [200, 240, 232, 249]
+    :return: A binary string representing hexadecimal values.
+    """
+
+    velocities = []
+    for speed in motorSpeed:
+        velocities.append(speed>>8 & 0xff)
+        velocities.append(speed & 0xff)
+    
+    return velocities

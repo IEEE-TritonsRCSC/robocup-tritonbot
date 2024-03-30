@@ -1,3 +1,4 @@
+'''
 wheelAll = bytes([0x11, 0x11, 0x0b, 0xb8, 0x0b, 0xb8, 0x0b, 0xb8, 0x0b, 0xb8])
 
 #print(str(wheelAll))
@@ -28,3 +29,48 @@ def hexToRpmArray(headerLength, data):
 hexSpeed = int('ffff', 16)  # Corrected the hexadecimal value
 speed = -(hexSpeed & 0x8000) | (hexSpeed & 0x7fff)  # Corrected the bit masking
 print(speed)
+
+
+
+def rpmArrayToHex(rpm):
+    """
+    This function converts an array of RPM values to a binary string representing hexadecimal values.
+    
+    :param rpm: An array of integer RPM values to convert to hexadecimal.
+    :return: A binary string representing hexadecimal values.
+    """
+    hex_string = b""
+    
+    for speed in rpm:
+        # Convert RPM to hexadecimal string
+        hex_speed = format(speed & 0xFFFF, '04x')  # Ensure 4-character width and hexadecimal representation
+        
+        # Convert hexadecimal string to binary and append to result
+        hex_string += str(bytes.fromhex(hex_speed))
+    
+    return str(hex_string)
+
+
+# Example usage:
+rpm = [1000, -2000, 3000, -4000]
+hex_data = rpmArrayToHex(rpm)
+print(hex_data)
+'''
+
+import binascii
+
+wheelAll = bytes([0x11, 0x11, 0x0b, 0xb8, 0x0b, 0xb8, 0x0b, 0xb8, 0x0b, 0xb8])
+
+# Convert bytes object to hexadecimal string and decode it
+hex_string = binascii.hexlify(wheelAll).decode()
+#print(hex_string)
+
+motorSpeed = -1 
+higherByte = (motorSpeed >> 8) & 0xff
+lowerByte = motorSpeed & 0xff
+
+velocities = [0x11, 0x11]
+for i in range(4):
+    velocities.append(motorSpeed>>8 & 0xff)
+    velocities.append(motorSpeed & 0xff)
+print(bytes(velocities))

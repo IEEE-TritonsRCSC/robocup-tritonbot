@@ -3,18 +3,17 @@ from interface.embedded_systems_interface import *
 from tritonbot_message_processor.velocityConversions30 import * 
 from analytics.plotter import *
 from interface.pid import PID as pid
+import binascii
 import sys
 
-motorSpeed = 3000 
-higherByte = (motorSpeed >> 8) & 0xff
-lowerByte = motorSpeed & 0xff
-print(motorSpeed)
+motorSpeed = [3000, 3000, 3000, 3000] 
+
 
 pid1 = pid(5, 1, 0, 1000, 8000)
 pid2 = pid(5, 1, 0, 1000, 8000)
 pid3 = pid(5, 1, 0, 1000, 8000)
 pid4 = pid(5, 1, 0, 1000, 8000)
-pidValues = []
+
 
 '''Move commands'''
 wheel1 = bytes([0x11, 0x11, 0x0a, 0xbc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
@@ -24,11 +23,7 @@ wheel4 = bytes([0x11, 0x11, 0x0a, 0xbc, 0x00, 0x00, 0x00, 0x00, 0x0a, 0xbc])
 wheelAll = bytes([0x11, 0x11, 0x0b, 0xb8, 0x0b, 0xb8, 0x0b, 0xb8, 0x0b, 0xb8])
 
 velocities = [0x11, 0x11]
-for i in range(4):
-    velocities.append(motorSpeed>>8 & 0xff)
-    velocities.append(motorSpeed & 0xff)
-print(bytes(velocities))
-
+velocities.append(rpmArrayToHex(motorSpeed))
 velocities = bytes(velocities)
 
 
@@ -75,50 +70,57 @@ def moveCommands():
 
 try:
     while True:
-        message = str(b'11110abc0abc0abc0abc')
-         
-        print(message)
+        if (len(sys.argv) == 1):
+            moveCommands()
         
-        #moveCommands() 
-        sendToEmbedded(velocities)
+        elif (len(sys.argv) > 1 and sys.argv[1] == "-a"):
+            sendToEmbedded(velocities)
 
-        actual_b = readFromEmbedded()
-        print(actual_b)
-        if str(actual_b) == "None":
-            print("NOTHING RECEIVED")
-            continue
-            actual_b = "11110000000000000000"
-        
-        
-        if (len(sys.argv) > 1 and sys.argv[1] == "-a"):
+            actual_b = readFromEmbedded()
+            print(actual_b)
+            if str(actual_b) == "None":
+                print("NOTHING RECEIVED")
+                continue
+            
             # visuals = Plotter()
-            expectedRpmArray = hexToRpmArray(6, message)#[motorSpeed, motorSpeed, motorSpeed, motorSpeed])
+            expectedRpmArray = hexToRpmArray(6, binascii.hexlify(velocities).decode()) #[motorSpeed, motorSpeed, motorSpeed, motorSpeed])
             actualRpmArray = hexToRpmArray(8, actual_b) 
             
-            print(f"Wheel 1 PID output: {pid1.pid_calc(actualRpmArray[0])}")
-            print(f"Wheel 2 PID output: {pid2.pid_calc(actualRpmArray[1])}")
-            print(f"Wheel 3 PID output: {pid3.pid_calc(actualRpmArray[2])}")
-            print(f"Wheel 4 PID output: {pid4.pid_calc(actualRpmArray[3])}")
+            pidValues = []
+            pidValues.append(pid1.pid_calc(actualRpmArray[0]))
+            print(f"Wheel 1 PID output: {pidValues[0]}")
+            pidValues.append(pid2.pid_calc(actualRpmArray[1]))
+            print(f"Wheel 2 PID output: {pidValues[1]}")
+            pidValues.append(pid3.pid_calc(actualRpmArray[2]))
+            print(f"Wheel 3 PID output: {pidValues[2]}")
+            pidValues.append(pid4.pid_calc(actualRpmArray[3]))
+            print(f"Wheel 4 PID output: {pidValues[3]}")
          
             print(f"Expected: {expectedRpmArray}")
             
             print(f"Actual: {actualRpmArray}")
             visuals.update_plot(t, expectedRpmArray, actualRpmArray)
+            
+            velocities = bytes([0x11, 0x11].append(rpmArrayToHex(pidValues)))
+            
             t += 1
             	
+        else:
+            print("Invalid command args. Crtl + C to terminate")
 
 		
 except KeyboardInterrupt:
-    stopAll()
-    print("\nProgram terminated.")
-    save = input("Graph plotted. Save to png? (Y/n)\n").upper()
+    if (len(sys.argv) > 1 and sys.argv[1] == "-a"):
+        stopAll()
+        print("\nProgram terminated.")
+        save = input("Graph plotted. Save to png? (Y/n)\n").upper()
 
-    if save == 'Y':
-        saveName = input("What would you like to name this file?\n")
-        visuals.save(saveName)
+        if save == 'Y':
+            saveName = input("What would you like to name this file?\n")
+            visuals.save(saveName)
 
 
 
 finally:
     stopAll()
-    print("stopped")
+    print("Process terminated\n")
