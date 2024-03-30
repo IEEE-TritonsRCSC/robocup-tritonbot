@@ -2,18 +2,16 @@ from time import sleep
 from interface.embedded_systems_interface import *
 from tritonbot_message_processor.velocityConversions30 import * 
 from analytics.plotter import *
-from interface.pid import PID as pid
+from tritonbot_message_processor.pid import PID as pid
 import binascii
 import sys
 
 motorSpeed = [3000, 3000, 3000, 3000] 
 
-
 pid1 = pid(5, 1, 0, 1000, 8000)
 pid2 = pid(5, 1, 0, 1000, 8000)
 pid3 = pid(5, 1, 0, 1000, 8000)
 pid4 = pid(5, 1, 0, 1000, 8000)
-
 
 '''Move commands'''
 wheel1 = bytes([0x11, 0x11, 0x0a, 0xbc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
