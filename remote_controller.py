@@ -103,14 +103,17 @@ try:
             
             if t%20 == 0:
                 print("Set new PID values:\n")
-                Kp = int(input("New kP: "))
-                Ki = int(input("New kI: "))
-                Kd = int(input("New kD: "))
-                
-                pid1.set_pid_constants(Kp, Kd, Ki)
-                pid2.set_pid_constants(Kp, Kd, Ki)
-                pid3.set_pid_constants(Kp, Kd, Ki)
-                pid4.set_pid_constants(Kp, Kd, Ki)
+                Kp = int(input("New kP (Press enter to skip): "))
+
+                if (Kp == None):
+                    pass
+                else:
+                    Ki = int(input("New kI: "))
+                    Kd = int(input("New kD: "))
+                    pid1.set_pid_constants(Kp, Kd, Ki)
+                    pid2.set_pid_constants(Kp, Kd, Ki)
+                    pid3.set_pid_constants(Kp, Kd, Ki)
+                    pid4.set_pid_constants(Kp, Kd, Ki)
                 
             t += 1
             	
