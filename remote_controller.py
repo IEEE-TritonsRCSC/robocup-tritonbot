@@ -105,9 +105,7 @@ try:
                 print("Set new PID values:\n")
                 Kp = int(input("New kP (Press enter to skip): "))
 
-                if (Kp == None):
-                    pass
-                else:
+                if (Kp != None):
                     Ki = int(input("New kI: "))
                     Kd = int(input("New kD: "))
                     pid1.set_pid_constants(Kp, Kd, Ki)
