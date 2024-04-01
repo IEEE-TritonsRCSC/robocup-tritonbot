@@ -1,27 +1,21 @@
 import math
-import ssl_simulation_robot_control_pb2 as RobotControl
-import triton_bot_communication_pb2 as Communication
+import proto.ssl_simulation_robot_control_pb2 as RobotControl
+import proto.triton_bot_communication_pb2 as Communication
 
 def getVelocityArray(heading, absV, theta, rotV):
     """
     The `getVelocityArray` function takes heading, absolute velocity, theta, and
     rotational velocity as input parameters and returns a byte array.
     
-    :param heading: Heading is the direction in which an object is pointing, usually
-    measured in degrees. It indicates the angle between the object's orientation and
-    a reference direction, often the north direction
-    :param absV: Absolute velocity is the speed of an object in a given direction,
-    regardless of its direction of motion. It is a scalar quantity and is typically
-    measured in units such as meters per second (m/s) or kilometers per hour (km/h)
-    :param theta: Theta is the angle of rotation in degrees. It represents the
-    amount of rotation or angular displacement of an object from its reference
-    position. In the context of the `getVelocityArray` function, the `theta`
-    parameter likely influences the calculation of the byte array based on the
-    rotation angle provided
-    :param rotV: RotV represents the rotational velocity of the object. It indicates
-    the rate at which the object is rotating around its axis. This parameter is used
-    in the `getVelocityArray` function to calculate and include the rotational
-    velocity information in the byte array that is returned by the function
+    :param heading: Heading is the direction the robot is pointing in relative to the
+	"upwards" direction (in terms of the global field orientation) as of this moment.
+    :param absV: The desired absolute translational speed of the robot, in meters per second.
+    :param theta: The desired direction the robot should move in, relative to the "upwards"
+	direction. Measured in radians. For example, theta = pi/2 means we want to move west,
+	while theta = -pi/4 means we want to move north-east
+    :param rotV: The desired rotational velocity of the robot, in radians per second.
+
+    :return: An integer array containing the desired speeds (in RPM) of each wheel
     """
     twoPI = 2*math.pi
     maxRPM = 15000
@@ -33,10 +27,10 @@ def getVelocityArray(heading, absV, theta, rotV):
     d = 0.13
     r = 0.05
 
-    # angle of wheel relative to the x-axis
+    # angle of each wheel relative to the x-axis
     B = [-math.pi/6,math.pi/6,5*math.pi/6,7*math.pi/6]
 
-    # position of wheel relative to center
+    # position of each wheel relative to center
     y = [d*math.cos(math.pi/6),d*math.cos(math.pi/6),d*-math.cos(math.pi/6),d*-math.cos(math.pi/6)]
     x = [d*math.sin(math.pi/6),d*-math.sin(math.pi/6),d*-math.sin(math.pi/6),d*math.sin(math.pi/6)]
  
@@ -61,8 +55,12 @@ def getVelocityArray(heading, absV, theta, rotV):
     return M
 
 def valuesToBytes(M):
-    # add header
-    #send = [0x0]
+    """ 
+    Converts an integer array into a byte array with each integer split into 
+    its first two bytes    
+    """
+
+    # initialize array
     send = []
 
     # add two bytes of info from each motor RPM
@@ -71,8 +69,6 @@ def valuesToBytes(M):
         send.append(M[i]>>0 & 0xff)
         print(M[i])
 
-    #send[2] = 0xab
-    #send[3] = 0x11
     return bytes(send)
 
 def getWheelVelocities(action):
@@ -95,10 +91,11 @@ def getWheelVelocities(action):
     return getVelocityArray(0, absV, theta, rotV)
 
 def action_to_byte_array(action):
+    """ 
+    Effectively an overload of getWheelVelocities that returns the desired wheel 
+    velocities split into two bytes each in a way that embedded can read
+    """
     return valuesToBytes(getWheelVelocities(action))
-
-
-
 
 # This function is used purely for data analytic purposes
 def hexToRpmArray(headerLength, data):

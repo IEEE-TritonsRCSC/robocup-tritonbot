@@ -1,8 +1,11 @@
 from time import sleep
 import sys
 import yaml
-import ssl_simulation_robot_control_pb2 as RobotControl
-import triton_bot_communication_pb2 as Communication
+import socket
+import select
+import proto.ssl_simulation_robot_control_pb2 as RobotControl
+import proto.triton_bot_communication_pb2 as Communication
+import math
 from tritonbot_message_processor.velocityConversions30 import * 
 from interface.ai_interface import *
 from interface.embedded_systems_interface import *
@@ -49,13 +52,13 @@ try:
         
         msg = action_to_byte_array(actions) 
         
-	    # Get kick speed as boolean value
+	# Get kick speed as boolean value
         if actions.kick_speed != 0:
             kick = bytes([0x14]) # Set action to kick (kick = true)
         else:
             kick = bytes([0x00])
 
-	    # Set dribbler byte to dribbler status
+	# Set dribbler byte to dribbler status
         if actions.dribbler_speed == 0 and dribbler_flag == True:
             dribbler = bytes([0x13]) # Turn off dribbler
             dribbler_flag = False
@@ -70,12 +73,12 @@ try:
         msg = header + msg + dribbler + kick
               
  
-	    # For debugging purposes
+	# For debugging purposes
         hex_values = [hex(value) for value in msg] # converting binary to hex for ease of reading
         print(msg)
         print(hex_values)
 
-	    # Send data to embedded
+	# Send data to embedded
         print(sendToEmbedded(msg))	
         actual_b = print(readFromEmbedded())
         

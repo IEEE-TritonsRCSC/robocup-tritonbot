@@ -23,14 +23,10 @@ def init_socket(address, port):
 
 	Creates a socket that binds the given address and port.
 
-	Args:
-		address:
-			The IP address that we want the socket to bind to
-		port:
-			The port on the IP address we want the socket to bind to
+	:param address: The IP address that we want the socket to bind to
+	:param port: The port on the IP address we want the socket to bind to
 
-	Returns:
-		The newly created socket
+	:return: The newly created socket
 	"""
 
     	# create a UDP socket
