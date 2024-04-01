@@ -1,8 +1,0 @@
-'''
-        # Extract velocities
-        for i in range(4):
-            for j in range(16):
-                expectedVelocities.append(expected[16*i + 16 + j]) # This line should work as expected
-                actualVelocities.append(actual[16*i + 16 + j])  # TODO: THIS LINE MUST BE CHANGED
-                                                                # AS IT DOES NOT ALIGN WITH THEW NEW ENCODING SCHEME (different from expected)
-'''
