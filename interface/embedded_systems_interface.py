@@ -49,7 +49,7 @@ def readFromEmbedded():
 
             # print("RECEIVED: ", rx_data.hex())  # Print hexadecimal representation
 
-        ser.flush()
+        ser.reset_input_buffer() # Flush input
 
         return rx_data.hex()
     return
