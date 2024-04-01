@@ -59,43 +59,43 @@ class Plotter:
         self.actualWheelVelocities4 = []
 
         # Create a figure and axis for all 4 wheels
-        self.fig, self.axs = plt.subplots(nrows=2, ncols=2, figsize=(10, 8))
+        self.fig, self.axs = plt.subplots(nrows=4, ncols=1, figsize=(10, 8))
 
         # Create an empty line
         #self.line_expected, = self.ax.plot([], [], label='expected wheel 1', color='green')
         #self.line_actual, = self.ax.plot([], [], label='actual wheel 1', color='red')
         
         # Plot on the first subplot (Wheel 1 top-left)
-        self.expectedWheel1 = self.axs[0, 0].plot(self.t, self.expectedWheelVelocities1, label='Expected', color='green')
-        self.actualWheel1 = self.axs[0, 0].plot(self.t, self.actualWheelVelocities1, label='Actual', color='red')
-        self.axs[0, 0].set_title('Wheel 1 Velocities')
-        self.axs[0, 0].set_xlabel('Time (s)')
-        self.axs[0, 0].set_ylabel('Velocity (RPM)')
-        self.axs[0, 0].legend()
+        self.expectedWheel1 = self.axs[0].plot(self.t, self.expectedWheelVelocities1, label='Expected', color='green')
+        self.actualWheel1 = self.axs[0].plot(self.t, self.actualWheelVelocities1, label='Actual', color='red')
+        self.axs[0].set_title('Wheel 1 Velocities')
+        self.axs[0].set_xlabel('Time (s)')
+        self.axs[0].set_ylabel('Velocity (RPM)')
+        self.axs[0].legend()
 
         # Plot on the second subplot (Wheel 2 top-right)
-        self.expectedWheel2 = self.axs[0, 1].plot(self.t, self.expectedWheelVelocities2, label='Expected', color='green')
-        self.actualWheel2 = self.axs[0, 1].plot(self.t, self.actualWheelVelocities2, label='Actual', color='red')
-        self.axs[0, 1].set_title('Wheel 2 Velocities')
-        self.axs[0, 1].set_xlabel('Time (s)')
-        self.axs[0, 1].set_ylabel('Velocity (RPM)')
-        self.axs[0, 1].legend()
+        self.expectedWheel2 = self.axs[1].plot(self.t, self.expectedWheelVelocities2, label='Expected', color='green')
+        self.actualWheel2 = self.axs[1].plot(self.t, self.actualWheelVelocities2, label='Actual', color='red')
+        self.axs[1].set_title('Wheel 2 Velocities')
+        self.axs[1].set_xlabel('Time (s)')
+        self.axs[1].set_ylabel('Velocity (RPM)')
+        self.axs[1].legend()
 
         # Plot on the third subplot (Wheel 3 bottom-left)
-        self.expectedWheel3 = self.axs[1, 0].plot(self.t, self.expectedWheelVelocities3, label='Expected', color='green')
-        self.actualWheel3 = self.axs[1, 0].plot(self.t, self.actualWheelVelocities3, label='Actual', color='red')
-        self.axs[1, 0].set_title('Wheel 3 Velocities')
-        self.axs[1, 0].set_xlabel('Time (s)')
-        self.axs[1, 0].set_ylabel('Velocity (RPM)')
-        self.axs[1, 0].legend()
+        self.expectedWheel3 = self.axs[2].plot(self.t, self.expectedWheelVelocities3, label='Expected', color='green')
+        self.actualWheel3 = self.axs[2].plot(self.t, self.actualWheelVelocities3, label='Actual', color='red')
+        self.axs[2].set_title('Wheel 3 Velocities')
+        self.axs[2].set_xlabel('Time (s)')
+        self.axs[2].set_ylabel('Velocity (RPM)')
+        self.axs[2].legend()
 
         # Plot on the fourth subplot (Wheel 4 bottom-right)
-        self.expectedWheel4 = self.axs[1, 1].plot(self.t, self.expectedWheelVelocities4, label='Expected', color='green')
-        self.actualWheel4 = self.axs[1, 1].plot(self.t, self.actualWheelVelocities4, label='Actual', color='red')
-        self.axs[1, 1].set_title('Wheel 4 Velocities')
-        self.axs[1, 1].set_xlabel('Time (s)')
-        self.axs[1, 1].set_ylabel('Velocity (RPM)')
-        self.axs[1, 1].legend()
+        self.expectedWheel4 = self.axs[3].plot(self.t, self.expectedWheelVelocities4, label='Expected', color='green')
+        self.actualWheel4 = self.axs[3].plot(self.t, self.actualWheelVelocities4, label='Actual', color='red')
+        self.axs[3].set_title('Wheel 4 Velocities')
+        self.axs[3].set_xlabel('Time (s)')
+        self.axs[3].set_ylabel('Velocity (RPM)')
+        self.axs[3].legend()
 
         plt.tight_layout()
         
@@ -104,7 +104,7 @@ class Plotter:
             ax.set_ylim(2000, 12000)
 
         # Create the animation
-        self.anim = animation(self.fig, self.update_plot, frames=100, interval=1000, repeat=False)
+        self.anim = animation(self.fig, self.update_plot, frames=100, interval=100, repeat=False)
         
     
     def extractVelocities(self, expected, actual):
@@ -215,18 +215,29 @@ class Plotter:
             ax.autoscale()  # Autoscale axis based on new data
 
         # Adjust limits for y-axis based on the maximum and minimum values of received data
-        y_min = min(min(self.expectedWheelVelocities1), min(self.actualWheelVelocities1),
-                    min(self.expectedWheelVelocities2), min(self.actualWheelVelocities2),
-                    min(self.expectedWheelVelocities3), min(self.actualWheelVelocities3),
-                    min(self.expectedWheelVelocities4), min(self.actualWheelVelocities4))
-        y_max = max(max(self.expectedWheelVelocities1), max(self.actualWheelVelocities1),
-                    max(self.expectedWheelVelocities2), max(self.actualWheelVelocities2),
-                    max(self.expectedWheelVelocities3), max(self.actualWheelVelocities3),
-                    max(self.expectedWheelVelocities4), max(self.actualWheelVelocities4))
+
+        y_min = min(min(self.actualWheelVelocities1),
+                    min(self.actualWheelVelocities2),
+                    min(self.actualWheelVelocities3),
+                    min(self.actualWheelVelocities4))
+        y_max = max(max(self.actualWheelVelocities1),
+                    max(self.actualWheelVelocities2),
+                    max(self.actualWheelVelocities3),
+                    max(self.actualWheelVelocities4))
+
+
+        y_min = [min(self.actualWheelVelocities1), min(self.actualWheelVelocities2), min(self.actualWheelVelocities3), min(self.actualWheelVelocities4)]
+        y_max = [max(self.actualWheelVelocities1), max(self.actualWheelVelocities2), max(self.actualWheelVelocities3), max(self.actualWheelVelocities4)]
+
 
         # Set the y-axis limits with some buffer to prevent data points from being on the edge
-        for ax in self.axs.flat:
-            ax.set_ylim(y_min - 1000, y_max + 1000)  # Adjust as needed
+        for i in range(len(self.axs.flat)):
+            self.axs.flat[i].set_ylim(y_min[i] - 25, y_max[i] + 25)  # Adjust as needed
+            #ax.set_ylim(y_min - 100, y_max + 100)  # Adjust as needed
+            if t > 20:
+                ax.set_xlim(t - 20, t + 1)
+     
+      
 
         plt.pause(0.0001)
 
