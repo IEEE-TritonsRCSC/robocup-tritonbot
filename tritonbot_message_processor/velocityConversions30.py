@@ -127,7 +127,7 @@ def rpmArrayToHex(motorSpeed):
 
     velocities = []
     for speed in motorSpeed:
-        velocities.append(speed>>8 & 0xff)
+        velocities.append((speed>>8) & 0xff)
         velocities.append(speed & 0xff)
     
     return velocities
