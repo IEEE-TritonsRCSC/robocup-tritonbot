@@ -7,7 +7,7 @@ is equal to 0x010101 to avoid receiving garbage data.
 """
 
 import serial
-from time import sleep
+#from time import sleep
 
 ser = serial.Serial('/dev/ttyS0', baudrate=115200, timeout=0.5)
 
@@ -49,7 +49,7 @@ def readFromEmbedded():
 
             # print("RECEIVED: ", rx_data.hex())  # Print hexadecimal representation
 
-        ser.reset_input_buffer() # Flush input
+        ser.reset_input_buffer() # Flush input buffer
 
         return rx_data.hex()
     return

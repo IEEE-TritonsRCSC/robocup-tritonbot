@@ -67,7 +67,7 @@ try:
  
         # Create header and assemble msg
         header = bytes([0x11]) + bytes([0x11]) # Set header byte
-        msg = header + msg + dribbler + kick
+        msg = header + msg + kick
               
  
 	# For debugging purposes
