@@ -48,7 +48,7 @@ counterclockwise = bytes([0x11, 0x11, 0x0a, 0xbc, 0xf5, 0x44, 0xf5, 0x44, 0x0a, 
 '''Actions'''
 reset = 0x00
 dribble = 0x01
-kick = 0x02
+# kick = 0x02
 chip = 0x03
 
 #visuals = Plotter()
@@ -59,8 +59,11 @@ def moveCommands():
     control = input("Enter move command. WASD, QE, K, or nothing to stop\n").upper()
     if (control == "K"):
         sendToEmbedded(kick)
+        print(f"Sent: {kick}")
+        print(readFromEmbedded())
     elif (control == "W"):
         sendToEmbedded(forwards)
+        print(readFromEmbedded())
     elif (control == "A"):
         sendToEmbedded(left)
     elif (control == "S"):
