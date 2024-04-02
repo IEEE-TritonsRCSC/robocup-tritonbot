@@ -33,6 +33,8 @@ velocities = bytes(velocities)
 
 stop = bytes([0x11, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
 
+kick = bytes([0x11, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x14])
+
 # 0xabc = 2748
 # 0xf544 = -2748
 left = bytes([0x11, 0x11, 0x0a, 0xbc, 0xf5, 0x44, 0x0a, 0xbc, 0xf5, 0x44])
@@ -54,8 +56,10 @@ t=0
 
 
 def moveCommands():
-    control = input("Enter move command. WASDQE or nothing to stop\n").upper()
-    if (control == "W"):
+    control = input("Enter move command. WASD, QE, K, or nothing to stop\n").upper()
+    if (control == "K"):
+        sendToEmbedded(kick)
+    elif (control == "W"):
         sendToEmbedded(forwards)
     elif (control == "A"):
         sendToEmbedded(left)
