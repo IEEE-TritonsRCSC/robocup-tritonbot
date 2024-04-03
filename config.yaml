@@ -1,6 +1,2 @@
-serverAddress: "224.1.1.1"
-<<<<<<< HEAD
+serverAddress: "0.0.0.0"
 tritonBotPort: 10600
-=======
-tritonBotPort: 10610
->>>>>>> 54943fb (pid control)

@@ -72,7 +72,7 @@ try:
  
 	# For debugging purposes
         hex_values = [hex(value) for value in msg] # converting binary to hex for ease of reading
-        print(msg)
+        print(f"Sent: {msg}")
         print(hex_values)
 
 	# Send data to embedded

@@ -25,7 +25,7 @@ def getVelocityArray(heading, absV, theta, rotV):
     vx = absV*math.cos(relativeTheta)
     vy = absV*math.sin(relativeTheta)
     d = 0.13
-    r = 0.05
+    r = 0.045
 
     # angle of each wheel relative to the x-axis
     B = [-math.pi/6,math.pi/6,5*math.pi/6,7*math.pi/6]
