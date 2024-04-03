@@ -44,7 +44,7 @@ def getVelocityArray(heading, absV, theta, rotV):
         M[i] /= r / 60
 
 	# account for gear ratio
-	M[i] *= 36
+        M[i] *= 36
 
     # rescale so that no wheel velocity exceeds our max RPM
     rescale = 1
