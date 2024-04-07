@@ -7,6 +7,7 @@ from tritonbot_message_processor.velocityConversions30 import *
 from interface.ai_interface import *
 from interface.embedded_systems_interface import *
 from analytics.plotter import *
+from interface.dribbler import *
 
 t = 0
 
@@ -22,6 +23,9 @@ udp_socket = init_socket(server_address, server_port)
 print(f"UDP Server listening on {server_address}:{server_port}")
 received_robot_control = Communication.TritonBotMessage()
 dribbler_flag = False
+
+# Instantiate dribbler
+setup_gpio()
 
 """Main feedback loop
 
@@ -59,9 +63,11 @@ try:
         if actions.dribbler_speed == 0 and dribbler_flag == True:
             dribbler = bytes([0x13]) # Turn off dribbler
             dribbler_flag = False
+            dribble_off() # Call dribbler file
         elif actions.dribbler_speed > 0 and dribbler_flag == False:
             dribbler = bytes([0x12]) # Turn on dribbler
             dribbler_flag = True
+            dribble_on() # Call dribbler file
         else:
             dribbler = bytes([0x00]) # Do nothing (Activate motors) 
  
