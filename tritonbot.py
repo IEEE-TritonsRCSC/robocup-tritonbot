@@ -18,6 +18,7 @@ server_address = config["serverAddress"]
 server_port = config["tritonBotPort"] 
 
 # Create a UDP socket
+print(f"Trying to connect to {server_address}:{server_port}")
 udp_socket = init_socket(server_address, server_port)
 
 print(f"UDP Server listening on {server_address}:{server_port}")
@@ -25,7 +26,8 @@ received_robot_control = Communication.TritonBotMessage()
 dribbler_flag = False
 
 # Instantiate dribbler
-setup_gpio()
+#setup_gpio()
+pi = pigpio.pi()
 
 """Main feedback loop
 
@@ -56,18 +58,20 @@ try:
 	# Get kick speed as boolean value
         if actions.kick_speed != 0:
             kick = bytes([0x14]) # Set action to kick (kick = true)
+            for i in range(100):
+                print("Kick command received")
         else:
             kick = bytes([0x00])
 
 	# Set dribbler byte to dribbler status
-        if actions.dribbler_speed == 0 and dribbler_flag == True:
-            dribbler = bytes([0x13]) # Turn off dribbler
+        if actions.dribbler_speed == 0:
             dribbler_flag = False
-            dribble_off() # Call dribbler file
-        elif actions.dribbler_speed > 0 and dribbler_flag == False:
-            dribbler = bytes([0x12]) # Turn on dribbler
+            pi.set_servo_pulsewidth(18, 1000)
+        elif actions.dribbler_speed > 0:
             dribbler_flag = True
-            dribble_on() # Call dribbler file
+            pi.set_servo_pulsewidth(18, 1200)
+            for i in range(5):
+                print("Dribbled")
         else:
             dribbler = bytes([0x00]) # Do nothing (Activate motors) 
  
