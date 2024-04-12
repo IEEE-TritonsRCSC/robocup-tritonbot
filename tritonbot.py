@@ -7,7 +7,7 @@ from tritonbot_message_processor.velocityConversions30 import *
 from interface.ai_interface import *
 from interface.embedded_systems_interface import *
 from analytics.plotter import *
-from interface.dribbler import *
+from interface.dribbler_RPI5 import *
 
 t = 0
 
@@ -25,10 +25,12 @@ print(f"UDP Server listening on {server_address}:{server_port}")
 received_robot_control = Communication.TritonBotMessage()
 dribbler_flag = False
 
+'''
 # Instantiate dribbler
 #setup_gpio()
 pi = pigpio.pi()
 print("Dribbler instantiated")
+'''
 
 print(f"Robot {str(server_port)[3]} ready")
 
@@ -69,10 +71,12 @@ try:
 	# Set dribbler byte to dribbler status
         if actions.dribbler_speed == 0:
             dribbler_flag = False
-            pi.set_servo_pulsewidth(18, 1000)
+            dribble_off()
+            #pi.set_servo_pulsewidth(18, 1000)
         elif actions.dribbler_speed > 0:
             dribbler_flag = True
-            pi.set_servo_pulsewidth(18, 1200)
+            dribble_on()
+            #pi.set_servo_pulsewidth(18, 1200)
             for i in range(5):
                 print("Dribbled")
         else:
