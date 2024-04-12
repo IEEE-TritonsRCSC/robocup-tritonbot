@@ -87,10 +87,11 @@ try:
 
 	# Send data to embedded
         print(sendToEmbedded(msg))	
-        actual_b = print(readFromEmbedded())
+        # actual_b = print(readFromEmbedded())
         
         # Draw up data analytics if -a flag is passed in the command-line args
         if (len(sys.argv) > 1 and sys.argv[1] == "-a"):
+            actual_b = print(readFromEmbedded())
             visuals = Plotter()
             expectedRpmArray = getWheelVelocities(actions)
             actualRpmArray = hexToRpmArray(4, actual_b) 
