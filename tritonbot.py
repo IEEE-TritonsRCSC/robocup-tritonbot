@@ -28,6 +28,9 @@ dribbler_flag = False
 # Instantiate dribbler
 #setup_gpio()
 pi = pigpio.pi()
+print("Dribbler instantiated")
+
+print(f"Robot {str(server_port)[3]} ready")
 
 """Main feedback loop
 
