@@ -7,7 +7,7 @@ from tritonbot_message_processor.velocityConversions30 import *
 from interface.ai_interface import *
 from interface.embedded_systems_interface import *
 from analytics.plotter import *
-from interface.dribbler_RPI5 import *
+from interface.dribbler import *
 
 t = 0
 
@@ -23,14 +23,10 @@ udp_socket = init_socket(server_address, server_port)
 
 print(f"UDP Server listening on {server_address}:{server_port}")
 received_robot_control = Communication.TritonBotMessage()
-dribbler_flag = False
 
-'''
 # Instantiate dribbler
-#setup_gpio()
-pi = pigpio.pi()
+setup_dribbler_pwm()
 print("Dribbler instantiated")
-'''
 
 print(f"Robot {str(server_port)[3]} ready")
 
@@ -52,7 +48,7 @@ try:
 
         actions = received_robot_control.command
 
-        # Print the raw fields and value
+        # Print the raw fields and value (for debugging)
         print("Fields and Values:")
         for field_descriptor, value in received_robot_control.ListFields():
             print(f"{field_descriptor.name}: {value}")
@@ -63,22 +59,20 @@ try:
 	# Get kick speed as boolean value
         if actions.kick_speed != 0:
             kick = bytes([0x14]) # Set action to kick (kick = true)
-            for i in range(100):
+            # For debugging
+            for i in range(50):
                 print("Kick command received")
         else:
             kick = bytes([0x00])
 
 	# Set dribbler byte to dribbler status
         if actions.dribbler_speed == 0:
-            dribbler_flag = False
             dribble_off()
-            #pi.set_servo_pulsewidth(18, 1000)
         elif actions.dribbler_speed > 0:
-            dribbler_flag = True
             dribble_on()
-            #pi.set_servo_pulsewidth(18, 1200)
+            # For debugging
             for i in range(5):
-                print("Dribbled")
+                print("Dribbling")
         else:
             dribbler = bytes([0x00]) # Do nothing (Activate motors) 
  
