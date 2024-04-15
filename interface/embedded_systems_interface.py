@@ -9,7 +9,7 @@ is equal to 0x010101 to avoid receiving garbage data.
 import serial
 #from time import sleep
 
-ser = serial.Serial('/dev/serial0', baudrate=115200, timeout=0.1)
+ser = serial.Serial('/dev/ttyAMA0', baudrate=115200, timeout=0.1)
 
 # Initialized message var used for testing
 message1 = bytes([0x01, 0x0a, 0xbc, 0x02, 0xbc, 0x02, 0xbc, 0x02, 0xbc])
