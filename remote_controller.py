@@ -57,6 +57,8 @@ def moveCommands():
         sendToEmbedded(kick)
     elif (control == "W"):
         sendToEmbedded(forwards)
+        print(f"Sent {forwards}")
+        print(f"Received {readFromEmbedded}")
     elif (control == "A"):
         sendToEmbedded(left)
     elif (control == "S"):
