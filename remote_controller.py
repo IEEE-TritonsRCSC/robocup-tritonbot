@@ -1,7 +1,7 @@
 from time import sleep
 from interface.embedded_systems_interface import *
 from tritonbot_message_processor.velocityConversions30 import * 
-from analytics.plotter import *
+#from analytics.plotter import *
 from tritonbot_message_processor.pid import PID as pid
 import binascii
 import sys
@@ -47,7 +47,7 @@ dribble = 0x01
 kick = 0x02
 chip = 0x03
 
-visuals = Plotter()
+#visuals = Plotter()
 t=0
 
 
