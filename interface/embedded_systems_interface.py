@@ -16,6 +16,18 @@ message1 = bytes([0x01, 0x0a, 0xbc, 0x02, 0xbc, 0x02, 0xbc, 0x02, 0xbc])
 message2 = bytes([0x11, 0x11, 0x0a, 0xbc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
 stop = bytes([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
 
+def replace_zero_with_one(byte_array):
+    # Create a new byte array to store the modified bytes
+    modified_array = bytearray()
+    # Iterate over the bytes in the input byte array
+    for byte in byte_array:
+        # If the byte is 0x00, replace it with 0x01
+        if byte == 0x00:
+            modified_array.append(0x01)
+        else:
+            modified_array.append(byte)
+    return bytes([byte for byte in modified_array])
+
 def sendToEmbedded(message):
     """Sends the passed message to the robot.
 
@@ -26,8 +38,11 @@ def sendToEmbedded(message):
     convention assumes that this is an array of bytes.
     :return: True
     """    
-
-    ser.write(message)
+    for byte_i in range(message):
+        if message[byte_i] == 0x00:
+            message[byte_i] == 0x01
+    
+    ser.write(replace_zero_with_one(message))
     ser.flush()
     return True
 

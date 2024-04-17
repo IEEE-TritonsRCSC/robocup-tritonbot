@@ -63,7 +63,7 @@ try:
             for i in range(50):
                 print("Kick command received")
         else:
-            kick = bytes([0x00])
+            kick = bytes([0x69])
 
 	# Set dribbler byte to dribbler status
         if actions.dribbler_speed == 0:
@@ -74,12 +74,11 @@ try:
             for i in range(5):
                 print("Dribbling")
         else:
-            dribbler = bytes([0x00]) # Do nothing (Activate motors) 
+            dribbler = bytes([0x69]) # Do nothing (Activate motors) 
  
         # Create header and assemble msg
         header = bytes([0x11]) + bytes([0x11]) # Set header byte
         msg = header + msg + kick
-              
  
 	# For debugging purposes
         hex_values = [hex(value) for value in msg] # converting binary to hex for ease of reading
