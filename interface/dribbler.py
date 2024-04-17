@@ -24,6 +24,7 @@ def dribble_on():
 		print("Dribbler at pulsewidth: " + str(curr))
 		os.system("echo 1130000 > /sys/class/pwm/pwmchip2/pwm2/duty_cycle")
 
+# Do not accidentally change this when adjusting speeds
 def dribble_off():
 	curr = int(os.popen("cat /sys/class/pwm/pwmchip2/pwm2/duty_cycle").read())
 	if curr > 1000000: # Try not to accidentally change this again lol
