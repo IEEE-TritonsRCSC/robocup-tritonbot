@@ -1,13 +1,13 @@
 from time import sleep
 from interface.embedded_systems_interface import *
-from tritonbot_message_processor.velocityConversions30 import * 
+from tritonbot_message_processor.velocityConversions30 import *
 #from analytics.plotter import *
 from tritonbot_message_processor.pid import PID as pid
 import binascii
 import sys
 
 wheelSpeed = 300
-motorSpeed = [wheelSpeed, wheelSpeed, wheelSpeed, wheelSpeed] 
+motorSpeed = [wheelSpeed, wheelSpeed, wheelSpeed, wheelSpeed]
 
 pid1 = pid(10, 0, 0, 1000, 8000)
 pid2 = pid(10, 0, 0, 1000, 8000)
@@ -27,25 +27,19 @@ velocities = bytes(velocities)
 
 
 
-stop = bytes([0x11, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+stop = bytes([0x11, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
 
 kick = bytes([0x11, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x14])
 
 # 0xabc = 2748
 # 0xf544 = -2748
-forwards = bytes([0x11, 0x11, 0xf5, 0x44, 0xf5, 0x44, 0x0a, 0xbc, 0x0a, 0xbc, 0x14])
-backwards = bytes([0x11, 0x11, 0xf5, 0x44, 0x0a, 0xbc, 0xf5, 0x44, 0x0a, 0xbc])
-left = bytes([0x11, 0x11, 0x0a, 0xbc, 0x0a, 0xbc, 0xf5, 0x44, 0xf5, 0x44])
-right = bytes([0x11, 0x11, 0xf5, 0x44, 0xf5, 0x44, 0x0a, 0xbc, 0x0a, 0xbc])
-clockwise = bytes([0x11, 0x11, 0xf5, 0x44, 0x0a, 0xbc, 0x0a, 0xbc, 0xf5, 0x44])
-counterclockwise = bytes([0x11, 0x11, 0x0a, 0xbc, 0xf5, 0x44, 0xf5, 0x44, 0x0a, 0xbc])
+forwards = bytes([0x11, 0x11, 0x0a, 0xbc, 0x0a, 0xbc, 0xf5, 0x44, 0xf5, 0x44, 0x00])
+backwards = bytes([0x11, 0x11, 0xf5, 0x44, 0xf5, 0x44, 0x0a, 0xbc, 0x0a, 0xbc, 0x00])
+left = bytes([0x11, 0x11, 0xf5, 0x44, 0x0a, 0xbc, 0xf5, 0x44, 0x0a, 0xbc, 0x00])
+right = bytes([0x11, 0x11, 0x0a, 0xbc, 0xf5, 0x44, 0x0a, 0xbc, 0xf5, 0x44, 0x00])
+clockwise = bytes([0x11, 0x11, 0x0a, 0xbc, 0x0a, 0xbc, 0x0a, 0xbc, 0x0a, 0xbc, 0x00])
+counterclockwise = bytes([0x11, 0x11, 0xf5, 0x44, 0xf5, 0x44, 0xf5, 0x44, 0xf5, 0x44, 0x00])
 
-
-'''Actions'''
-reset = 0x00
-dribble = 0x01
-kick = 0x02
-chip = 0x03
 
 #visuals = Plotter()
 t=0
@@ -56,29 +50,28 @@ def moveCommands():
     if (control == "K"):
         sendToEmbedded(kick)
     elif (control == "W"):
-        for i in range(100):
-            sendToEmbedded(forwards)
-            print(f"Sent {forwards}")
-            print(f"Received {readFromEmbedded}")
+        sendToEmbedded(forwards)
+        print(f"Sent {forwards}")
+        print(f"Received {readFromEmbedded}")
     elif (control == "A"):
         sendToEmbedded(left)
     elif (control == "S"):
-        sendToEmbedded(right)
-    elif (control == "D"):
         sendToEmbedded(backwards)
+    elif (control == "D"):
+        sendToEmbedded(right)
     elif (control == "Q"):
         sendToEmbedded(counterclockwise)
     elif (control == "E"):
         sendToEmbedded(clockwise)
     else:
-        stopAll()
+        sendToEmbedded(stop)
     pass
 
 try:
     while True:
         if (len(sys.argv) == 1):
             moveCommands()
-        
+
         elif (len(sys.argv) > 1 and sys.argv[1] == "-a"):
             velocities = [0x11, 0x11] + rpmArrayToHex(motorSpeed)
             velocities = bytes(velocities)
@@ -91,13 +84,13 @@ try:
             if str(actual_b) == "None":
                 print("NOTHING RECEIVED")
                 continue
-            
+
             # visuals = Plotter()
             expectedRpmArray = hexToRpmArray(16, binascii.hexlify(velocities).decode()) #[motorSpeed, motorSpeed, motorSpeed, motorSpeed])
-            actualRpmArray = hexToRpmArray(8, actual_b) 
-            
+            actualRpmArray = hexToRpmArray(8, actual_b)
 
-            
+
+
             pidValues = []
             motorSpeed[0] = (pid1.pid_calc(actualRpmArray[0]))
             #print(f"Wheel 1 PID output: {pidValues[0]}")
@@ -107,12 +100,12 @@ try:
             #print(f"Wheel 3 PID output: {pidValues[2]}")
             motorSpeed[3] = (pid4.pid_calc(actualRpmArray[3]))
             #print(f"Wheel 4 PID output: {pidValues[3]}")
-            
+
             print(f"Expected: {expectedRpmArray}")
-            
+
             print(f"Actual: {actualRpmArray}")
             visuals.update_plot(t, expectedRpmArray, actualRpmArray)
-            
+
             # velocities = bytes([0x11, 0x11] + rpmArrayToHex(pidValues))
             print(f"New motor speeds: {motorSpeed}")
             if t%35 == 0:
@@ -128,17 +121,18 @@ try:
                     pid2.set_pid_constants(Kp, Kd, Ki)
                     pid3.set_pid_constants(Kp, Kd, Ki)
                     pid4.set_pid_constants(Kp, Kd, Ki)
-                
+
             t += 1
-            	
+
         else:
             print("Invalid command args. Crtl + C to terminate")
-		
+
 except KeyboardInterrupt:
     if (len(sys.argv) > 1 and sys.argv[1] == "-a"):
         stopAll()
         print("\nProgram terminated.")
         visuals.save()
+    stopAll()
 
 finally:
     stopAll()

@@ -1,8 +1,8 @@
 """Receive and Send data to embedded design.
 
-This class sends and receives data to and from the STM32 on the robot using UART. 
-This class assumes a baud rate of 115200 and times out after 1 second if no data 
-is sent/received. Current convention assumes that the header byte of data received 
+This class sends and receives data to and from the STM32 on the robot using UART.
+This class assumes a baud rate of 115200 and times out after 1 second if no data
+is sent/received. Current convention assumes that the header byte of data received
 is equal to 0x010101 to avoid receiving garbage data.
 """
 
@@ -14,7 +14,7 @@ ser = serial.Serial('/dev/ttyAMA0', baudrate=115200, timeout=0.1)
 # Initialized message var used for testing
 message1 = bytes([0x01, 0x0a, 0xbc, 0x02, 0xbc, 0x02, 0xbc, 0x02, 0xbc])
 message2 = bytes([0x11, 0x11, 0x0a, 0xbc, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
-stop = bytes([0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
+stop = bytes([0x11, 0x11, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00])
 
 def replace_zero_with_one(byte_array):
     # Create a new byte array to store the modified bytes
@@ -31,13 +31,13 @@ def replace_zero_with_one(byte_array):
 def sendToEmbedded(message):
     """Sends the passed message to the robot.
 
-    Takes a message parameter of an array of bytes and sends this to embedded 
+    Takes a message parameter of an array of bytes and sends this to embedded
     design via UART.
 
-    :param message: The message to be sent to the robot. Although not enforced, 
+    :param message: The message to be sent to the robot. Although not enforced,
     convention assumes that this is an array of bytes.
     :return: True
-    """    
+    """
     ser.write(message)
     ser.flush()
     return True
@@ -71,16 +71,16 @@ def stopAll():
 
 def test():
     """Function to test sending and receiving data
-    
-    Sends a message to embedded design and waits for a response. Then 
+
+    Sends a message to embedded design and waits for a response. Then
     prints the received response. Repeats in a while loop until terminated.
     """
-    try: 
+    try:
         while True:
             sendToEmbedded(stop)
             print("sent")
             print(f"Received data: {readFromEmbedded()}")
-		
+
     except KeyboardInterrupt:
         print("\nProgram terminated.")
 
