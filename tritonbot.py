@@ -104,7 +104,7 @@ try:
 
 except KeyboardInterrupt:
     print("Server stopped by user.")
-    
+    dribble_off()
     if (len(sys.argv) > 1 and sys.argv[1] == "-a"):
         save = input("Graph plotted. Save to png? (Y/n)\n").upper()
         if save == 'Y':

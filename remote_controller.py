@@ -128,6 +128,7 @@ try:
             print("Invalid command args. Crtl + C to terminate")
 
 except KeyboardInterrupt:
+    os.system("echo 1000000 > /sys/class/pwm/pwmchip2/pwm2/duty_cycle")
     if (len(sys.argv) > 1 and sys.argv[1] == "-a"):
         stopAll()
         print("\nProgram terminated.")
