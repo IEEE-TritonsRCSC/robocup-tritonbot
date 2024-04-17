@@ -16,23 +16,23 @@ def setup_dribbler_pwm():
 
 def dribble_on():
 	curr = int(os.popen("cat /sys/class/pwm/pwmchip2/pwm2/duty_cycle").read())
-	if curr < 1130000:
+	if curr < 1150000:
 		new = curr + 25
 		print(f"Increasing dribbler pulsewidth: {new}")
 		os.system("echo " + str(new) + " > /sys/class/pwm/pwmchip2/pwm2/duty_cycle")
 	else:
 		print("Dribbler at pulsewidth: " + str(curr))
-		os.system("echo 1130000 > /sys/class/pwm/pwmchip2/pwm2/duty_cycle")
+		os.system("echo 1150000 > /sys/class/pwm/pwmchip2/pwm2/duty_cycle")
 
 def dribble_off():
 	curr = int(os.popen("cat /sys/class/pwm/pwmchip2/pwm2/duty_cycle").read())
-	if curr > 1130000:
+	if curr > 1000000: # Try not to accidentally change this again lol
 		new = curr - 25
 		print(f"Decreasing dribbler pulsewidth: {new}")
 		os.system("echo " + str(new) + " > /sys/class/pwm/pwmchip2/pwm2/duty_cycle")
 	else:
 		print("Dribbler at min pulsewidth: " + str(curr))
-		os.system("echo 1130000 > /sys/class/pwm/pwmchip2/pwm2/duty_cycle")
+		os.system("echo 1000000 > /sys/class/pwm/pwmchip2/pwm2/duty_cycle")
 
 '''
 setup_dribbler_pwm()
