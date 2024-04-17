@@ -38,10 +38,6 @@ def sendToEmbedded(message):
     convention assumes that this is an array of bytes.
     :return: True
     """    
-    for byte_i in range(message):
-        if message[byte_i] == 0x00:
-            message[byte_i] == 0x01
-    
     ser.write(message)
     ser.flush()
     return True
