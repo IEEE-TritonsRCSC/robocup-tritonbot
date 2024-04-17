@@ -42,7 +42,7 @@ def sendToEmbedded(message):
         if message[byte_i] == 0x00:
             message[byte_i] == 0x01
     
-    ser.write(replace_zero_with_one(message))
+    ser.write(message)
     ser.flush()
     return True
 
