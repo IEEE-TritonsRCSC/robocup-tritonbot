@@ -1,3 +1,4 @@
+```bash
 .
 ├── analytics
 │   ├── plotter.py
@@ -39,7 +40,7 @@
 └── tritonbot.py
 
 8 directories, 31 files
-
+```
 
 Folder Descriptions
 
