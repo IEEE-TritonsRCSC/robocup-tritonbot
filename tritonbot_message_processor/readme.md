@@ -2,6 +2,7 @@
 
 ## Purpose:
 The `velocityConversions.py` module is designed to process actions received from an external source, typically an AI server, and convert these actions into specific wheel velocities suitable for controlling a robotic system. The primary goal is to interpret desired local velocities (forward, left, and angular) and translate them into individual wheel velocities that can be understood and executed by the robot's motion control system.
+The main dataflow when called from tritonbot.py looks like: action_to_byte_array -> getWheelVelocities -> getVelocityArray -> valuesToBytes
 
 ## Functionality and Workflow:
 
@@ -31,6 +32,7 @@ The `velocityConversions.py` module is designed to process actions received from
   - Converts an array of integer wheel velocities (`M`) into a byte array format suitable for transmission.
   - Each integer value is split into two bytes and appended to the output byte array.
 
+For data analytics only:
 ### `hexToRpmArray(headerLength, data)`
 - **Description**:
   - Converts a hexadecimal string (`data`) into an array of integer RPM values.
