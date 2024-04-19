@@ -111,3 +111,43 @@ python TritonBot.py -a
     The script initializes a Plotter object for graphical representation.
     During execution, it updates the plot with expected and actual data.
     Optionally, the user can save the plotted graph to a PNG file upon script termination.
+
+
+
+# Overview of `tritonbot.py`
+
+## Imports:
+- `sys`, `yaml`: Used for accessing the config file.
+- `proto.ssl_simulation_robot_control_pb2`, `proto.triton_bot_communication_pb2`: Local imports of protobuf decompilers for understanding protobuf data received from AI.
+- `interface.ai_interface`: Handles setup of a UDP socket to receive data from the AI server.
+- `tritonbot_message_processor.velocityConversions30`: Converts raw velocities to a byte format using a specified encoding scheme for communication with embedded systems.
+- `interface.dribbler`: Interfaces with and controls the robot's onboard dribbler.
+- `analytics.plotter`: Utilized for data analytics.
+
+## Configuration:
+1. Extracts network configuration settings (address and port) from `config.yaml`, loading them into local variables `server_address` and `server_port`.
+2. Initializes a UDP socket and establishes a connection to the specified address and port via UDP multicast.
+3. `received_robot_control = Communication.TritonBotMessage()`: Initializes an instance of the `TritonBotMessage` class from the `Communication` module to handle incoming data in a specific message format defined by the protocol buffer.
+4. `setup_dribbler_pwm()`: Instantiates the dribbler for subsequent use in the script.
+
+## Main Feedback Loop:
+
+1. `data, client_address = udp_socket.recvfrom(1024)`: Receives data from the UDP socket.
+2. `received_robot_control.ParseFromString(data)`: Decodes the binary data into a `received_robot_control` object.
+3. `actions = received_robot_control.command`: Retrieves the `command` field from `received_robot_control`, containing `RobotCommand`s defined in the protobuf file `ssl_simulation_robot_control.proto` on the AI side.
+4. `msg = action_to_byte_array(actions)`: Extracts forward/backward and left/right velocities from `actions`, converting them into individual wheel velocities stored in a byte array.
+5. Checks if `actions` contains a kick command (`actions.kick_speed`), setting `kick` to `[0x14]` if true or `[0x00]` if false.
+6. Controls the dribbler (`dribble_on()` or `dribble_off()`) based on the dribble speed specified in `actions`.
+7. Constructs a packet (`msg`) with a predefined header (`header`) and appends the kick command (`kick`).
+8. `sendToEmbedded(msg)`: Sends the packet (`msg`) across UART to the embedded systems (Robomaster STM32).
+
+## Real-time Data Analytics (Optional):
+
+- If the `-a` flag is passed in the command-line interface (CLI), additional code executes for real-time data analytics using X11 forwarding.
+
+## Keyboard Interrupt and Termination:
+
+- Upon detecting a `KeyboardInterrupt` (`Ctrl + C`), the script exits the feedback loop and terminates:
+  - Turns off the dribbler.
+  - If the `-a` flag was passed, prompts the user to save the graph.
+- Finally, closes the UDP socket.
